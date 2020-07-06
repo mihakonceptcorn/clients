@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Components\ClientsSearch\ClientsSearch;
+use App\Http\Requests\SearchRequest;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class SearchController extends Controller
@@ -24,10 +24,10 @@ class SearchController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param SearchRequest $request
      * @return RedirectResponse|View
      */
-    public function getResults(Request $request)
+    public function getResults(SearchRequest $request)
     {
         $query = $request->get('query');
         if (!$query) {

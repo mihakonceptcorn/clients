@@ -11,6 +11,7 @@ class ClientsSearch
 {
     private const CACHE_DURATION = 'PT10M';
     private const SEARCH_LIMIT = 10;
+    private const CACHE_PREFIX = 'search_';
 
     /**
      * @param $query
@@ -18,8 +19,10 @@ class ClientsSearch
      */
     public function search($query)
     {
-        if (Cache::has($query)) {
-            $clients = Cache::get($query);
+        $key = self::CACHE_PREFIX . $query;
+
+        if (Cache::has($key)) {
+            $clients = Cache::get($key);
             $searchSource = 'Result from cache';
         } else {
             $clients = Client::where(DB::raw("CONCAT(name, ' ', surname)"),
@@ -30,7 +33,7 @@ class ClientsSearch
                 ->get();
             $searchSource = 'Result from database';
             if (!empty($clients)) {
-                Cache::add($query, $clients, new \DateInterval(self::CACHE_DURATION));
+                Cache::add($key, $clients, new \DateInterval(self::CACHE_DURATION));
             }
         }
 
